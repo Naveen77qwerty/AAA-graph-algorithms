@@ -56,14 +56,20 @@ test: build
 	run_test "DarkRoads/dark_roads" "DarkRoads/input1.txt" "DarkRoads/expected1.txt" "DR-Test1 (Sample 7 junctions, 11 roads)"; \
 	run_test "DarkRoads/dark_roads" "DarkRoads/input2.txt" "DarkRoads/expected2.txt" "DR-Test2 (Edge case 1 junction, 0 roads)"; \
 	run_test "DarkRoads/dark_roads" "DarkRoads/input3.txt" "DarkRoads/expected3.txt" "DR-Test3 (Multiple test cases)"; \
+	run_test "DarkRoads/dark_roads" "DarkRoads/input4.txt" "DarkRoads/expected4.txt" "DR-Test4 (Dense 10 junctions, 15 roads)"; \
+	run_test "DarkRoads/dark_roads" "DarkRoads/input5.txt" "DarkRoads/expected5.txt" "DR-Test5 (Cyclic 8 junctions, 12 roads)"; \
 	printf "\n$(BOLD)$(CYAN)▶ Play on Words (UVa 10129)$(RESET)\n"; \
 	run_test "PlayOnWords/play_on_words" "PlayOnWords/input1.txt" "PlayOnWords/expected1.txt" "PW-Test1 (Official sample)"; \
 	run_test "PlayOnWords/play_on_words" "PlayOnWords/input2.txt" "PlayOnWords/expected2.txt" "PW-Test2 (Single word / disconnected)"; \
 	run_test "PlayOnWords/play_on_words" "PlayOnWords/input3.txt" "PlayOnWords/expected3.txt" "PW-Test3 (Degree-imbalanced)"; \
+	run_test "PlayOnWords/play_on_words" "PlayOnWords/input4.txt" "PlayOnWords/expected4.txt" "PW-Test4 (Eulerian Circuit 8 words)"; \
+	run_test "PlayOnWords/play_on_words" "PlayOnWords/input5.txt" "PlayOnWords/expected5.txt" "PW-Test5 (Disconnected multi-component)"; \
 	printf "\n$(BOLD)$(CYAN)▶ Knight in a War Grid (UVa 11906)$(RESET)\n"; \
 	run_test "KnightInWar/knight_in_war" "KnightInWar/input1.txt" "KnightInWar/expected1.txt" "KW-Test1 (Sample 3x3 and 2x2 grid)"; \
 	run_test "KnightInWar/knight_in_war" "KnightInWar/input2.txt" "KnightInWar/expected2.txt" "KW-Test2 (M==N edge cases)"; \
 	run_test "KnightInWar/knight_in_war" "KnightInWar/input3.txt" "KnightInWar/expected3.txt" "KW-Test3 (M==0 / N==0 edge cases)"; \
+	run_test "KnightInWar/knight_in_war" "KnightInWar/input4.txt" "KnightInWar/expected4.txt" "KW-Test4 (10x10 Grid with 8 Water cells)"; \
+	run_test "KnightInWar/knight_in_war" "KnightInWar/input5.txt" "KnightInWar/expected5.txt" "KW-Test5 (12x12 Grid with 6 Water cells)"; \
 	printf "\n$(BOLD)$(CYAN)──────────────────────────────────────────────────────────────$(RESET)\n"; \
 	if [ $$pass_count -eq $$total_count ]; then \
 		printf "$(BOLD)  SUMMARY: $(GREEN)%d / %d PASSED$(RESET)\n" $$pass_count $$total_count; \
@@ -102,16 +108,22 @@ benchmark: build
 	run_bench "DarkRoads/dark_roads" "DarkRoads/input1.txt" "DarkRoads/expected1.txt" "Sample (7 junctions, 11 roads)"; \
 	run_bench "DarkRoads/dark_roads" "DarkRoads/input2.txt" "DarkRoads/expected2.txt" "Edge case (1 junction, 0 roads)"; \
 	run_bench "DarkRoads/dark_roads" "DarkRoads/input3.txt" "DarkRoads/expected3.txt" "Multiple test cases"; \
+	run_bench "DarkRoads/dark_roads" "DarkRoads/input4.txt" "DarkRoads/expected4.txt" "Dense (10 junctions, 15 roads)"; \
+	run_bench "DarkRoads/dark_roads" "DarkRoads/input5.txt" "DarkRoads/expected5.txt" "Cyclic (8 junctions, 12 roads)"; \
 	printf "\n$(BOLD)$(CYAN)▶ Play on Words (UVa 10129)$(RESET)\n"; \
 	printf "   $(DIM)Algorithm: Eulerian Path (DSU + degree check) — O(N)$(RESET)\n\n"; \
 	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input1.txt" "PlayOnWords/expected1.txt" "Official sample (3 test cases)"; \
 	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input2.txt" "PlayOnWords/expected2.txt" "Single word / disconnected graph"; \
 	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input3.txt" "PlayOnWords/expected3.txt" "Degree-imbalanced (impossible)"; \
+	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input4.txt" "PlayOnWords/expected4.txt" "Eulerian Circuit (8 words)"; \
+	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input5.txt" "PlayOnWords/expected5.txt" "Disconnected multi-component"; \
 	printf "\n$(BOLD)$(CYAN)▶ Knight in a War Grid (UVa 11906)$(RESET)\n"; \
 	printf "   $(DIM)Algorithm: BFS + unique-move dedup — O(R·C·8)$(RESET)\n\n"; \
 	run_bench "KnightInWar/knight_in_war" "KnightInWar/input1.txt" "KnightInWar/expected1.txt" "Sample cases (3x3 and 2x2 grid)"; \
 	run_bench "KnightInWar/knight_in_war" "KnightInWar/input2.txt" "KnightInWar/expected2.txt" "M==N edge cases"; \
 	run_bench "KnightInWar/knight_in_war" "KnightInWar/input3.txt" "KnightInWar/expected3.txt" "M==0 / N==0 edge cases"; \
+	run_bench "KnightInWar/knight_in_war" "KnightInWar/input4.txt" "KnightInWar/expected4.txt" "10x10 Grid (8 Water cells)"; \
+	run_bench "KnightInWar/knight_in_war" "KnightInWar/input5.txt" "KnightInWar/expected5.txt" "12x12 Grid (6 Water cells)"; \
 	printf "\n$(BOLD)$(CYAN)──────────────────────────────────────────────────────────────$(RESET)\n"; \
 	if [ $$pass_count -eq $$total_count ]; then \
 		printf "$(BOLD)  SUMMARY: $(GREEN)%d / %d PASSED$(RESET)\n" $$pass_count $$total_count; \

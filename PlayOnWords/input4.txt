@@ -1,0 +1,10 @@
+1
+8
+apple
+element
+tiger
+rabbit
+train
+nest
+tail
+llama

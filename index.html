@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAA Graph Algorithms Visualizer</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Minimal Header -->
+  <header>
+    <div class="logo-group">
+      <h1 class="title">Graph Algorithms Visualizer</h1>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-group">
+      <button class="tab-btn active" data-algo="dark_roads">Dark Roads (MST)</button>
+      <button class="tab-btn" data-algo="knight_in_war">Knight in War (BFS)</button>
+      <button class="tab-btn" data-algo="play_on_words">Play on Words (Eulerian)</button>
+    </nav>
+  </header>
+
+  <!-- Main Canvas Container — Full Screen Fill -->
+  <main>
+    <section class="canvas-container">
+      
+      <!-- Floating Overlay Stats Banner -->
+      <div id="statsBanner" class="stats-banner">
+        <!-- Rendered by visualizer.js -->
+      </div>
+
+      <!-- Full Screen Canvas -->
+      <canvas id="vizCanvas"></canvas>
+    </section>
+
+    <!-- Minimal Floating Control Bar -->
+    <footer class="control-bar">
+      <div class="controls-left">
+        <button id="resetBtn" class="btn" title="Reset Animation">⏮ Reset</button>
+        <button id="stepPrevBtn" class="btn" title="Step Backward">◀ Back</button>
+        <button id="playPauseBtn" class="btn btn-primary" title="Play / Pause"><span>▶</span> Play</button>
+        <button id="stepNextBtn" class="btn" title="Step Forward">Next ▶</button>
+
+        <div class="slider-group" style="margin-left: 0.5rem;">
+          <label for="speedSlider">Speed:</label>
+          <input type="range" id="speedSlider" min="100" max="2000" step="100" value="1600">
+        </div>
+      </div>
+
+      <div class="controls-right">
+        <!-- Preset Selector -->
+        <select id="presetSelect" title="Select Preset Test Case">
+          <!-- Rendered by visualizer.js -->
+        </select>
+
+        <!-- Custom Input Button -->
+        <button id="openInputBtn" class="btn btn-outline">✏️ Custom Input</button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Custom Input Modal -->
+  <div id="inputModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Enter Custom Algorithm Input</h3>
+        <button id="closeModalBtn" class="modal-close">✕</button>
+      </div>
+
+      <p id="inputHint" class="input-hint">Format details...</p>
+
+      <textarea id="customInputArea" placeholder="Type custom input data here..."></textarea>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+        <button id="applyInputBtn" class="btn btn-primary">Visualize Custom Input</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="visualizer.js"></script>
+</body>
+</html>

@@ -220,7 +220,20 @@ function renderStep(idx) {
 }
 
 function updateStatsBanner(stats) {
-  document.getElementById('statsBanner').innerHTML = Object.entries(stats)
+  const algoBadges = {
+    dark_roads: "⚡ Borůvka / Kruskal MST (18.06ms)",
+    knight_in_war: "⚡ Queue BFS (6.55ms)",
+    play_on_words: "⚡ DFS Component Check (10.73ms)"
+  };
+
+  const badgeHtml = `
+    <div class="stat-chip" style="background: #e0e7ff; border-color: #c7d2fe;">
+      <span class="label" style="color: #4338ca;">Best Algo</span>
+      <span class="value" style="font-size: 0.85rem; color: #3730a3;">${algoBadges[currentAlgo]}</span>
+    </div>
+  `;
+
+  document.getElementById('statsBanner').innerHTML = badgeHtml + Object.entries(stats)
     .map(([k, v]) => `
       <div class="stat-chip">
         <span class="label">${k}</span>

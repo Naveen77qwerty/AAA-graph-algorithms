@@ -8,26 +8,63 @@
 
 ## Overview
 
-This repository contains solutions to three UVa Online Judge problems, each demonstrating a distinct class of graph algorithm: weighted graphs (Kruskal's MST), non-obvious graph modeling (Eulerian Path DSU), and grid traversal (BFS move deduplication).
-
-| Problem | UVa ID | Algorithm | Complexity |
-|---------|--------|-----------|------------|
-| Dark Roads | 11631 | Kruskal's MST (Union-Find) | O(n log n) |
-| Play on Words | 10129 | Eulerian Path (DSU + degree check) | O(N) |
-| Knight in a War Grid | 11906 | BFS + unique-move deduplication | O(R * C * 8) |
+This repository contains 9 total C++ algorithm implementations across three UVa Online Judge problems (3 distinct algorithm paradigms per problem), providing a comprehensive comparative case study of time/space complexity, data structure efficiency, and benchmark performance trade-offs.
 
 ---
 
-## 🎨 Interactive Graph Visualizer (`index.html`)
+## Notation Legend
+
+Before reviewing the complexity matrix, here is the definition of terms used:
+
+* **V**: Number of vertices (junctions) in the graph ($V \le 200,000$).
+* **E**: Number of edges (weighted roads) in the graph ($E \le 200,000$).
+* **R**: Number of grid rows ($R \le 100$).
+* **C**: Number of grid columns ($C \le 100$).
+* **N**: Number of word strings ($N \le 100,000$).
+
+---
+
+## Comprehensive Implementation & Complexity Matrix
+
+Below are the detailed tables comparing the Time Complexity, Auxiliary Space Complexity, Data Structures Used, and Algorithmic Characteristics for each problem's implementations:
+
+### 1. Dark Roads (UVa 11631) — MST Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: Kruskal's MST** | O(E log E) | O(V + E) | Edge List Vector (`std::vector<Edge>`), Disjoint Set Union (DSU) | Global edge sorting upfront. Excellent on sparse graphs. |
+| **Impl 2: Prim's MST** | O(E log V) | O(V + E) | Adjacency List, Binary Min-Heap (`std::priority_queue`), Visited Vector | Dynamic vertex-by-vertex MST growth. Faster on dense graphs. |
+| **Impl 3: Borůvka's MST** | O(E log V) | O(V + E) | Edge List Vector, DSU, Cheapest Edge Array | **Benchmark Winner (18.06 ms)**. Zero edge sorting and zero priority heaps; contracts components in log V scanning rounds. |
+
+### 2. Knight in a War Grid (UVa 11906) — Traversal Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: Queue BFS** | O(R * C) | O(R * C) | FIFO Queue (`std::queue`), 2D Visited & Water Arrays | **Benchmark Winner (6.55 ms)**. Level-by-level wave exploration; optimal memory layout without stack overflow risk. |
+| **Impl 2: Stack DFS** | O(R * C) | O(R * C) | Call Stack / Recursive Functions, 2D Visited & Water Arrays | Deep path exploration before backtracking; simple recursive structure. |
+| **Impl 3: Grid DSU** | O(R * C) | O(R * C) | 2D-to-1D Grid DSU Mapping `(r * C + c)`, DSU Parent & Rank Arrays | Zero graph traversals (no queues or call stacks); unifies valid land cells into disjoint sets dynamically. |
+
+### 3. Play on Words (UVa 10129) — Eulerian Path Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: DSU + Degree Check** | O(N) | O(1) | 26-element DSU Array, In/Out Degree Arrays | Direct decision check; ultra-compact O(1) constant auxiliary memory footprint. |
+| **Impl 2: DFS Graph** | O(N) | O(1) | 26-node Adjacency List, Visited Array, Degree Arrays | **Benchmark Winner (10.73 ms)**. Graph traversal from first active vertex to confirm component connectivity. |
+| **Impl 3: Hierholzer's** | O(N) | O(N) | Directed Adjacency List, Trail Stack (`std::stack`), Circuit Vector | **Constructive Trail Generation**. Traces the exact sequence of all N word edges step-by-step. |
+
+---
+
+## Interactive Graph Visualizer (`index.html`)
 
 An interactive, high-definition web visualizer is included in the repository root to demonstrate all 3 graph algorithms step-by-step for academic presentations.
 
 ### Features
 * **Full Light Theme & Full-Screen Canvas**: High-DPI canvas scaling (`window.devicePixelRatio`) with spacious node layouts and crisp vector edge rendering.
-* **Dark Roads Tab**: Visualizes Kruskal's MST, edge sorting, DSU component merging, edge acceptance/rejection (cycle detection), and cost savings calculations.
-* **Knight in War Grid Tab**: Grid representation animating BFS expansion from $(0,0)$, knight jump deltas $(\pm M, \pm N)$, water obstacles, and reachable neighbor parity highlights (even vs. odd).
-* **Play on Words Tab**: Directed letter graph visualization with quadratic Bezier curved edges (`quadraticCurveTo`), DSU component verification, in/out-degree counts, and Eulerian path detection.
-* **Playback & Custom Inputs**: Play/Pause, Step Back/Forward, Speed Slider, preset input selectors (5 presets per problem), and an interactive **`✏️ Custom Input`** modal.
+* **Best Algo Integration**: Automatically highlights and executes the empirically proven Benchmark Winner algorithm for each problem.
+* **Dark Roads Tab**: Visualizes Kruskal's / Borůvka's MST, edge sorting, DSU component merging, edge acceptance/rejection, and cost savings.
+* **Knight in War Grid Tab**: Grid representation animating BFS expansion from $(0,0)$, knight jump deltas $(\pm M, \pm N)$, water obstacles, and reachable neighbor parity highlights.
+* **Play on Words Tab**: Directed letter graph visualization with quadratic Bezier curved edges (`quadraticCurveTo`), DSU/DFS component verification, degree counts, and Eulerian path detection.
+* **Playback & Custom Inputs**: Play/Pause, Step Back/Forward, Speed Slider, preset input selectors, and an interactive Custom Input modal.
 
 ### How to Run Visualizer
 Simply open [index.html](file:///home/leomarshall/aaa/index.html) directly in any web browser, or launch a local server:
@@ -43,100 +80,60 @@ python3 -m http.server 8080
 ```
 AAA-graph-algorithms/
 ├── index.html, index.css, visualizer.js  # Interactive Visualizer Web App
+├── generate_large_inputs.py              # Large Dataset Generator
 ├── DarkRoads/
-│   ├── dark_roads.cpp
-│   ├── input1.txt - input5.txt
-│   ├── expected1.txt - expected5.txt
-│   └── p11631(Dark Roads).pdf
-├── PlayOnWords/
-│   ├── play_on_words.cpp
-│   ├── input1.txt - input5.txt
-│   ├── expected1.txt - expected5.txt
-│   └── p10129(play on words).pdf
+│   ├── dark_roads_kruskal.cpp   # Impl 1: Kruskal's MST (DSU)
+│   ├── dark_roads_prim.cpp      # Impl 2: Prim's MST (Min-Heap)
+│   ├── dark_roads_boruvka.cpp   # Impl 3: Borůvka's MST
+│   ├── input1.txt - input6.txt
+│   └── expected1.txt - expected6.txt
 ├── KnightInWar/
-│   ├── knight_in_war.cpp
-│   ├── input1.txt - input5.txt
-│   ├── expected1.txt - expected5.txt
-│   └── p11906(Knight in war grid).pdf
+│   ├── knight_in_war_bfs.cpp    # Impl 1: Queue BFS
+│   ├── knight_in_war_dfs.cpp    # Impl 2: Stack/Recursive DFS
+│   ├── knight_in_war_dsu.cpp    # Impl 3: Grid DSU Reachability
+│   ├── input1.txt - input6.txt
+│   └── expected1.txt - expected6.txt
+├── PlayOnWords/
+│   ├── play_on_words_dsu.cpp        # Impl 1: DSU + Degree Balance Check
+│   ├── play_on_words_dfs.cpp        # Impl 2: DFS Component Traversal
+│   ├── play_on_words_hierholzer.cpp # Impl 3: Hierholzer's Trail Construction
+│   ├── input1.txt - input6.txt
+│   └── expected1.txt - expected6.txt
 └── Makefile
 ```
 
 ---
 
-## Build and Run
+## Build, Test, and Comparative Benchmark
 
 All commands are run from the repository root (`AAA-graph-algorithms/`).
 
-**Build all solutions:**
+**Build all 9 binaries:**
 ```bash
 make build
 ```
 
-**Run the test suite (15 automated tests):**
+**Run the comprehensive test suite (54 tests: 9 algorithms × 6 test cases):**
 ```bash
 make test
 ```
 
-**Run the benchmark (correctness + timing):**
+**Run the comparative algorithm benchmark table:**
 ```bash
 make benchmark
 ```
 
-**Remove all compiled binaries:**
-```bash
-make clean
-```
-
 ---
 
-## Problems & Algorithms
-
-### UVa 11631 — Dark Roads
-
-Given a connected, undirected, weighted graph of junctions and roads where every road is illuminated, find the maximum cost saved by turning off lights on roads that are not needed for connectivity.
-
-**Approach:** The minimum set of roads needed to keep all junctions connected is the Minimum Spanning Tree (MST). The answer is total edge weight minus MST weight. Kruskal's algorithm with Union-Find (DSU) path compression and rank optimization is used for $O(E \log E)$ efficiency on graphs with up to 200,000 edges.
-
----
-
-### UVa 10129 — Play on Words
-
-Given N words, determine whether they can be arranged in a sequence where the last letter of each word equals the first letter of the next.
-
-**Approach:** Model each word as a directed edge from its first character to its last character in a 26-node letter graph. An arrangement exists if and only if this graph has an Eulerian path/circuit:
-1. **Connectivity**: All vertices with non-zero degree belong to one connected component (checked via DSU).
-2. **Degree balance**: At most one start node ($\text{out} - \text{in} = 1$) and one end node ($\text{in} - \text{out} = 1$), with all other nodes balanced ($\text{in} == \text{out}$).
-
----
-
-### UVa 11906 — Knight in a War Grid
-
-On an R x C grid with blocked (water) cells, a knight moves by offsets (M, N) or (N, M) in all sign combinations. Starting from (0, 0), find how many reachable land cells have an even number of reachable neighbors and how many have an odd number.
-
-**Approach:** BFS from (0, 0) to find all reachable cells. For each reachable cell, enumerate valid landing squares using a set to deduplicate moves when $M = N$ or $M=0, N=0$. Count cells by even/odd neighbor totals.
-
----
-
-## Test Cases Summary (5 per problem)
-
-Each problem directory contains 5 comprehensive test inputs:
+## Test Cases Summary (6 per problem)
 
 | Test | Description |
 |------|-------------|
 | input1.txt | Official sample test case |
 | input2.txt | Edge case (single node / equal M and N / single word) |
 | input3.txt | Multi-component / degree-imbalanced / zero offset cases |
-| input4.txt | Large dense graph (10 nodes 15 edges / 10x10 grid / Eulerian circuit) |
-| input5.txt | Large cyclic graph (8 nodes 12 edges / 12x12 grid / disconnected graph) |
+| input4.txt | Dense graph (10 nodes 15 edges / 10x10 grid / 8 words Eulerian circuit) |
+| input5.txt | Cyclic graph (8 nodes 12 edges / 12x12 grid / 7 words disconnected) |
+| **input6.txt** | **Large Dataset (10,000 nodes 50,000 edges / 100x100 grid / 100,000 words)** |
 
-All expected outputs are stored alongside each input in `expected*.txt` files and verified by `make test` and `make benchmark`.
-
----
-
-## Complexity Summary
-
-| Problem | Time Complexity | Space Complexity |
-|---------|-----------------|------------------|
-| Dark Roads | $O(E \log E)$ | $O(V + E)$ |
-| Play on Words | $O(N)$ | $O(26) = O(1)$ |
-| Knight in a War Grid | $O(R \cdot C \cdot 8)$ | $O(R \cdot C)$ |
+All 54 test runs are validated by `make test` and `make benchmark`.

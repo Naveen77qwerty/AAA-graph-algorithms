@@ -14,32 +14,43 @@ This repository contains 9 total C++ algorithm implementations across three UVa 
 
 ## Notation Legend
 
-Before reviewing the complexity matrix, here is the definition of mathematical terms and variables used:
+Before reviewing the complexity matrix, here is the definition of terms used:
 
 * **V**: Number of vertices (junctions) in the graph ($V \le 200,000$).
 * **E**: Number of edges (weighted roads) in the graph ($E \le 200,000$).
 * **R**: Number of grid rows ($R \le 100$).
 * **C**: Number of grid columns ($C \le 100$).
 * **N**: Number of word strings ($N \le 100,000$).
-* **α(X)**: Inverse Ackermann Function ($\alpha(X) \le 4$ for all physical inputs, practically $O(1)$ amortized cost per Disjoint Set Union operation).
 
 ---
 
 ## Comprehensive Implementation & Complexity Matrix
 
-Below is a detailed master table comparing the Time Complexity, Space Complexity, Data Structures Used, and Algorithmic Characteristics across all 9 implementations:
+Below are the detailed tables comparing the Time Complexity, Auxiliary Space Complexity, Data Structures Used, and Algorithmic Characteristics for each problem's implementations:
 
-| Problem & UVa ID | Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
-|------------------|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
-| **Dark Roads**<br>*(UVa 11631)* | **Impl 1: Kruskal's MST** | $O(E \log E + E \cdot \alpha(V))$ | $O(V + E)$ | Edge List Vector (`std::vector<Edge>`), Disjoint Set Union (DSU with Path Compression & Rank) | Global edge sorting upfront. Excellent on sparse graphs ($E \approx V$). |
-| | **Impl 2: Prim's MST** | $O(E \log V)$ | $O(V + E)$ | Adjacency List (`vector<vector<pair<int,int>>>`), Binary Min-Heap (`std::priority_queue`), Visited Vector | Dynamic vertex-by-vertex MST growth. Faster than Kruskal on dense graphs ($E \gg V$). |
-| | **Impl 3: Borůvka's MST** | $O(E \log V)$ | $O(V + E)$ | Edge List Vector, DSU, Cheapest Outgoing Edge Array (`vector<int>`) | **Benchmark Winner (18.06 ms)**. Zero edge sorting and zero priority heaps; contracts components in $\log V$ scanning rounds. |
-| **Knight in a War Grid**<br>*(UVa 11906)* | **Impl 1: Queue BFS** | $O(R \cdot C \cdot 8)$ | $O(R \cdot C)$ | FIFO Queue (`std::queue<pair<int,int>>`), 2D Visited & Water Arrays (`bool[105][105]`), Move Vector | **Benchmark Winner (6.55 ms)**. Level-by-level wave exploration; optimal memory layout without call stack overflow risk. |
-| | **Impl 2: Stack DFS** | $O(R \cdot C \cdot 8)$ | $O(R \cdot C)$ | Call Stack / Recursive Functions, 2D Visited & Water Arrays | Deep path exploration before backtracking; simple recursive structure. |
-| | **Impl 3: Grid DSU** | $O(R \cdot C \cdot 8 \cdot \alpha(RC))$ | $O(R \cdot C)$ | 2D-to-1D Grid DSU Mapping `(r * C + c)`, DSU Parent & Rank Arrays | Zero graph traversals (no queues or call stacks); unifies valid land cells into disjoint sets dynamically. |
-| **Play on Words**<br>*(UVa 10129)* | **Impl 1: DSU + Degree Check** | $O(N + 26 \cdot \alpha(26)) = O(N)$ | $O(1)$ | 26-element DSU (`parent[26]`, `rank_[26]`), In/Out Degree Arrays (`indeg[26]`, `outdeg[26]`) | Direct decision check; ultra-compact $O(1)$ constant auxiliary memory footprint. |
-| | **Impl 2: DFS Graph** | $O(N + 26)$ | $O(1)$ | 26-node Undirected Adjacency List (`vector<int> adj[26]`), Visited Array (`bool visited[26]`), Degree Arrays | **Benchmark Winner (10.73 ms)**. Graph traversal from first active vertex to confirm component connectivity. |
-| | **Impl 3: Hierholzer's** | $O(N)$ | $O(N)$ | Directed Adjacency List (`vector<int> adj[26]`), Trail Stack (`std::stack<int>`), Circuit Vector | **Constructive Trail Generation**. Unlike Impl 1 & 2 which return Yes/No, Hierholzer's traces the exact sequence of all $N$ word edges. |
+### 1. Dark Roads (UVa 11631) — MST Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: Kruskal's MST** | O(E log E) | O(V + E) | Edge List Vector (`std::vector<Edge>`), Disjoint Set Union (DSU) | Global edge sorting upfront. Excellent on sparse graphs. |
+| **Impl 2: Prim's MST** | O(E log V) | O(V + E) | Adjacency List, Binary Min-Heap (`std::priority_queue`), Visited Vector | Dynamic vertex-by-vertex MST growth. Faster on dense graphs. |
+| **Impl 3: Borůvka's MST** | O(E log V) | O(V + E) | Edge List Vector, DSU, Cheapest Edge Array | **Benchmark Winner (18.06 ms)**. Zero edge sorting and zero priority heaps; contracts components in log V scanning rounds. |
+
+### 2. Knight in a War Grid (UVa 11906) — Traversal Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: Queue BFS** | O(R * C) | O(R * C) | FIFO Queue (`std::queue`), 2D Visited & Water Arrays | **Benchmark Winner (6.55 ms)**. Level-by-level wave exploration; optimal memory layout without stack overflow risk. |
+| **Impl 2: Stack DFS** | O(R * C) | O(R * C) | Call Stack / Recursive Functions, 2D Visited & Water Arrays | Deep path exploration before backtracking; simple recursive structure. |
+| **Impl 3: Grid DSU** | O(R * C) | O(R * C) | 2D-to-1D Grid DSU Mapping `(r * C + c)`, DSU Parent & Rank Arrays | Zero graph traversals (no queues or call stacks); unifies valid land cells into disjoint sets dynamically. |
+
+### 3. Play on Words (UVa 10129) — Eulerian Path Complexity Matrix
+
+| Implementation Paradigm | Time Complexity | Auxiliary Space | Key Data Structures Used | Implementation Characteristics & Benchmark Performance |
+|-------------------------|-----------------|-----------------|---------------------------|--------------------------------------------------|
+| **Impl 1: DSU + Degree Check** | O(N) | O(1) | 26-element DSU Array, In/Out Degree Arrays | Direct decision check; ultra-compact O(1) constant auxiliary memory footprint. |
+| **Impl 2: DFS Graph** | O(N) | O(1) | 26-node Adjacency List, Visited Array, Degree Arrays | **Benchmark Winner (10.73 ms)**. Graph traversal from first active vertex to confirm component connectivity. |
+| **Impl 3: Hierholzer's** | O(N) | O(N) | Directed Adjacency List, Trail Stack (`std::stack`), Circuit Vector | **Constructive Trail Generation**. Traces the exact sequence of all N word edges step-by-step. |
 
 ---
 

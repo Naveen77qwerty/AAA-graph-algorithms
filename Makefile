@@ -1,7 +1,16 @@
 CXX := g++
 CXXFLAGS := -O2 -std=c++17 -Wall
 
-BINARIES := DarkRoads/dark_roads PlayOnWords/play_on_words KnightInWar/knight_in_war
+BINARIES := \
+  DarkRoads/dark_roads_kruskal \
+  DarkRoads/dark_roads_prim \
+  DarkRoads/dark_roads_boruvka \
+  KnightInWar/knight_in_war_bfs \
+  KnightInWar/knight_in_war_dfs \
+  KnightInWar/knight_in_war_dsu \
+  PlayOnWords/play_on_words_dsu \
+  PlayOnWords/play_on_words_dfs \
+  PlayOnWords/play_on_words_hierholzer
 
 # Colors
 BOLD   := \033[1m
@@ -17,26 +26,53 @@ RESET  := \033[0m
 all: build
 
 build: clean
-	@printf "$(BOLD)$(CYAN)Compiling graph algorithm solutions...$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)Compiling all 9 graph algorithm solutions (3 per problem)...$(RESET)\n"
 	@$(MAKE) --no-print-directory $(BINARIES)
-	@printf "$(GREEN)✓ All binaries built successfully.$(RESET)\n\n"
+	@printf "$(GREEN)✓ All 9 binaries built successfully.$(RESET)\n\n"
 
-DarkRoads/dark_roads: DarkRoads/dark_roads.cpp
+# Dark Roads Targets
+DarkRoads/dark_roads_kruskal: DarkRoads/dark_roads_kruskal.cpp
 	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
 	@$(CXX) $(CXXFLAGS) -o $@ $<
 
-PlayOnWords/play_on_words: PlayOnWords/play_on_words.cpp
+DarkRoads/dark_roads_prim: DarkRoads/dark_roads_prim.cpp
 	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
 	@$(CXX) $(CXXFLAGS) -o $@ $<
 
-KnightInWar/knight_in_war: KnightInWar/knight_in_war.cpp
+DarkRoads/dark_roads_boruvka: DarkRoads/dark_roads_boruvka.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+# Knight in War Targets
+KnightInWar/knight_in_war_bfs: KnightInWar/knight_in_war_bfs.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+KnightInWar/knight_in_war_dfs: KnightInWar/knight_in_war_dfs.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+KnightInWar/knight_in_war_dsu: KnightInWar/knight_in_war_dsu.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+# Play on Words Targets
+PlayOnWords/play_on_words_dsu: PlayOnWords/play_on_words_dsu.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+PlayOnWords/play_on_words_dfs: PlayOnWords/play_on_words_dfs.cpp
+	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
+	@$(CXX) $(CXXFLAGS) -o $@ $<
+
+PlayOnWords/play_on_words_hierholzer: PlayOnWords/play_on_words_hierholzer.cpp
 	@printf "  $(CYAN)► Compiling$(RESET) %s -> %s\n" "$<" "$@"
 	@$(CXX) $(CXXFLAGS) -o $@ $<
 
 test: build
-	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n"
-	@printf "$(BOLD)$(CYAN)  AAA GRAPH ALGORITHMS — TEST SUITE RESULTS$(RESET)\n"
-	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)  AAA GRAPH ALGORITHMS — COMPREHENSIVE TEST SUITE (9 ALGORITHMS × 6 TESTS)$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════$(RESET)\n"
 	@pass_count=0; total_count=0; \
 	run_test() { \
 		binary="$$1"; inp="$$2"; exp="$$3"; label="$$4"; \
@@ -45,94 +81,97 @@ test: build
 		expected=$$(cat $$exp 2>/dev/null | tr '\n' ' ' | sed 's/ $$//'); \
 		if [ "$$actual" = "$$expected" ]; then \
 			pass_count=$$((pass_count + 1)); \
-			printf "  [ $(GREEN)PASS$(RESET) ]  %-42s\n" "$$label"; \
+			printf "  [ $(GREEN)PASS$(RESET) ]  %-55s\n" "$$label"; \
 		else \
-			printf "  [ $(RED)FAIL$(RESET) ]  %-42s\n" "$$label"; \
+			printf "  [ $(RED)FAIL$(RESET) ]  %-55s\n" "$$label"; \
 			printf "           $(RED)Expected:$(RESET) %s\n" "$$expected"; \
 			printf "           $(RED)Actual:  $(RESET) %s\n" "$$actual"; \
 		fi; \
 	}; \
 	printf "\n$(BOLD)$(CYAN)▶ Dark Roads (UVa 11631)$(RESET)\n"; \
-	run_test "DarkRoads/dark_roads" "DarkRoads/input1.txt" "DarkRoads/expected1.txt" "DR-Test1 (Sample 7 junctions, 11 roads)"; \
-	run_test "DarkRoads/dark_roads" "DarkRoads/input2.txt" "DarkRoads/expected2.txt" "DR-Test2 (Edge case 1 junction, 0 roads)"; \
-	run_test "DarkRoads/dark_roads" "DarkRoads/input3.txt" "DarkRoads/expected3.txt" "DR-Test3 (Multiple test cases)"; \
-	run_test "DarkRoads/dark_roads" "DarkRoads/input4.txt" "DarkRoads/expected4.txt" "DR-Test4 (Dense 10 junctions, 15 roads)"; \
-	run_test "DarkRoads/dark_roads" "DarkRoads/input5.txt" "DarkRoads/expected5.txt" "DR-Test5 (Cyclic 8 junctions, 12 roads)"; \
+	for i in 1 2 3 4 5 6; do \
+		run_test "DarkRoads/dark_roads_kruskal" "DarkRoads/input$$i.txt" "DarkRoads/expected$$i.txt" "Impl 1 (Kruskal)  — Test $$i"; \
+		run_test "DarkRoads/dark_roads_prim"    "DarkRoads/input$$i.txt" "DarkRoads/expected$$i.txt" "Impl 2 (Prim Heap) — Test $$i"; \
+		run_test "DarkRoads/dark_roads_boruvka" "DarkRoads/input$$i.txt" "DarkRoads/expected$$i.txt" "Impl 3 (Boruvka)   — Test $$i"; \
+	done; \
 	printf "\n$(BOLD)$(CYAN)▶ Play on Words (UVa 10129)$(RESET)\n"; \
-	run_test "PlayOnWords/play_on_words" "PlayOnWords/input1.txt" "PlayOnWords/expected1.txt" "PW-Test1 (Official sample)"; \
-	run_test "PlayOnWords/play_on_words" "PlayOnWords/input2.txt" "PlayOnWords/expected2.txt" "PW-Test2 (Single word / disconnected)"; \
-	run_test "PlayOnWords/play_on_words" "PlayOnWords/input3.txt" "PlayOnWords/expected3.txt" "PW-Test3 (Degree-imbalanced)"; \
-	run_test "PlayOnWords/play_on_words" "PlayOnWords/input4.txt" "PlayOnWords/expected4.txt" "PW-Test4 (Eulerian Circuit 8 words)"; \
-	run_test "PlayOnWords/play_on_words" "PlayOnWords/input5.txt" "PlayOnWords/expected5.txt" "PW-Test5 (Disconnected multi-component)"; \
+	for i in 1 2 3 4 5 6; do \
+		run_test "PlayOnWords/play_on_words_dsu"        "PlayOnWords/input$$i.txt" "PlayOnWords/expected$$i.txt" "Impl 1 (DSU Degree) — Test $$i"; \
+		run_test "PlayOnWords/play_on_words_dfs"        "PlayOnWords/input$$i.txt" "PlayOnWords/expected$$i.txt" "Impl 2 (DFS Graph)  — Test $$i"; \
+		run_test "PlayOnWords/play_on_words_hierholzer" "PlayOnWords/input$$i.txt" "PlayOnWords/expected$$i.txt" "Impl 3 (Hierholzer) — Test $$i"; \
+	done; \
 	printf "\n$(BOLD)$(CYAN)▶ Knight in a War Grid (UVa 11906)$(RESET)\n"; \
-	run_test "KnightInWar/knight_in_war" "KnightInWar/input1.txt" "KnightInWar/expected1.txt" "KW-Test1 (Sample 3x3 and 2x2 grid)"; \
-	run_test "KnightInWar/knight_in_war" "KnightInWar/input2.txt" "KnightInWar/expected2.txt" "KW-Test2 (M==N edge cases)"; \
-	run_test "KnightInWar/knight_in_war" "KnightInWar/input3.txt" "KnightInWar/expected3.txt" "KW-Test3 (M==0 / N==0 edge cases)"; \
-	run_test "KnightInWar/knight_in_war" "KnightInWar/input4.txt" "KnightInWar/expected4.txt" "KW-Test4 (10x10 Grid with 8 Water cells)"; \
-	run_test "KnightInWar/knight_in_war" "KnightInWar/input5.txt" "KnightInWar/expected5.txt" "KW-Test5 (12x12 Grid with 6 Water cells)"; \
-	printf "\n$(BOLD)$(CYAN)──────────────────────────────────────────────────────────────$(RESET)\n"; \
+	for i in 1 2 3 4 5 6; do \
+		run_test "KnightInWar/knight_in_war_bfs" "KnightInWar/input$$i.txt" "KnightInWar/expected$$i.txt" "Impl 1 (Queue BFS)  — Test $$i"; \
+		run_test "KnightInWar/knight_in_war_dfs" "KnightInWar/input$$i.txt" "KnightInWar/expected$$i.txt" "Impl 2 (Stack DFS)  — Test $$i"; \
+		run_test "KnightInWar/knight_in_war_dsu" "KnightInWar/input$$i.txt" "KnightInWar/expected$$i.txt" "Impl 3 (Grid DSU)   — Test $$i"; \
+	done; \
+	printf "\n$(BOLD)$(CYAN)──────────────────────────────────────────────────────────────────────────────$(RESET)\n"; \
 	if [ $$pass_count -eq $$total_count ]; then \
 		printf "$(BOLD)  SUMMARY: $(GREEN)%d / %d PASSED$(RESET)\n" $$pass_count $$total_count; \
 	else \
 		printf "$(BOLD)  SUMMARY: $(RED)%d / %d PASSED (%d FAILED)$(RESET)\n" $$pass_count $$total_count $$((total_count - pass_count)); \
 	fi; \
-	printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n\n"
+	printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════$(RESET)\n\n"
 
 benchmark: build
-	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n"
-	@printf "$(BOLD)$(CYAN)  AAA GRAPH ALGORITHMS — BENCHMARK RESULTS$(RESET)\n"
-	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n"
-	@pass_count=0; total_count=0; total_time=0; slowest_label=""; slowest_time=0; \
-	run_bench() { \
-		binary="$$1"; inp="$$2"; exp="$$3"; label="$$4"; \
-		total_count=$$((total_count + 1)); \
-		t0=$$(date +%s%N); \
-		actual=$$(./$$binary < $$inp 2>&1 | tr '\n' ' ' | sed 's/ $$//'); \
-		t1=$$(date +%s%N); \
-		elapsed_ms=$$(awk "BEGIN {printf \"%.2f\", ($$t1 - $$t0)/1000000}"); \
-		expected=$$(cat $$exp 2>/dev/null | tr '\n' ' ' | sed 's/ $$//'); \
-		total_time=$$(awk "BEGIN {printf \"%.2f\", $$total_time + $$elapsed_ms}"); \
-		is_slowest=$$(awk "BEGIN {print ($$elapsed_ms > $$slowest_time ? 1 : 0)}"); \
-		if [ "$$is_slowest" -eq 1 ]; then slowest_time=$$elapsed_ms; slowest_label="$$label"; fi; \
-		if [ "$$actual" = "$$expected" ]; then \
-			pass_count=$$((pass_count + 1)); \
-			printf "  [ $(GREEN)PASS$(RESET) ]  %-42s  ⏱  %6.2f ms\n" "$$label" "$$elapsed_ms"; \
-		else \
-			printf "  [ $(RED)FAIL$(RESET) ]  %-42s  ⏱  %6.2f ms\n" "$$label" "$$elapsed_ms"; \
-			printf "           $(RED)Expected:$(RESET) %s\n" "$$expected"; \
-			printf "           $(RED)Actual:  $(RESET) %s\n" "$$actual"; \
-		fi; \
+	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════════════$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)  AAA GRAPH ALGORITHMS — COMPARATIVE ALGORITHM BENCHMARK TABLE$(RESET)\n"
+	@printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════════════$(RESET)\n"
+	@run_bench_row() { \
+		inp="$$1"; exp="$$2"; label="$$3"; b1="$$4"; b2="$$5"; b3="$$6"; \
+		time_binary() { \
+			b="$$1"; i="$$2"; e="$$3"; \
+			t0=$$(date +%s%N); \
+			act=$$(./$$b < $$i 2>&1 | tr '\n' ' ' | sed 's/ $$//'); \
+			t1=$$(date +%s%N); \
+			ms=$$(awk "BEGIN {printf \"%.2f\", ($$t1 - $$t0)/1000000}"); \
+			expected=$$(cat $$e 2>/dev/null | tr '\n' ' ' | sed 's/ $$//'); \
+			if [ "$$act" = "$$expected" ]; then \
+				printf "%6.2f ms [P]" "$$ms"; \
+			else \
+				printf "%6.2f ms [F]" "$$ms"; \
+			fi; \
+		}; \
+		res1=$$(time_binary "$$b1" "$$inp" "$$exp"); \
+		res2=$$(time_binary "$$b2" "$$inp" "$$exp"); \
+		res3=$$(time_binary "$$b3" "$$inp" "$$exp"); \
+		printf "  │ %-28s │ %-15s │ %-15s │ %-15s │\n" "$$label" "$$res1" "$$res2" "$$res3"; \
 	}; \
-	printf "\n$(BOLD)$(CYAN)▶ Dark Roads (UVa 11631)$(RESET)\n"; \
-	printf "   $(DIM)Algorithm: Kruskal's MST — O(n log n)$(RESET)\n\n"; \
-	run_bench "DarkRoads/dark_roads" "DarkRoads/input1.txt" "DarkRoads/expected1.txt" "Sample (7 junctions, 11 roads)"; \
-	run_bench "DarkRoads/dark_roads" "DarkRoads/input2.txt" "DarkRoads/expected2.txt" "Edge case (1 junction, 0 roads)"; \
-	run_bench "DarkRoads/dark_roads" "DarkRoads/input3.txt" "DarkRoads/expected3.txt" "Multiple test cases"; \
-	run_bench "DarkRoads/dark_roads" "DarkRoads/input4.txt" "DarkRoads/expected4.txt" "Dense (10 junctions, 15 roads)"; \
-	run_bench "DarkRoads/dark_roads" "DarkRoads/input5.txt" "DarkRoads/expected5.txt" "Cyclic (8 junctions, 12 roads)"; \
-	printf "\n$(BOLD)$(CYAN)▶ Play on Words (UVa 10129)$(RESET)\n"; \
-	printf "   $(DIM)Algorithm: Eulerian Path (DSU + degree check) — O(N)$(RESET)\n\n"; \
-	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input1.txt" "PlayOnWords/expected1.txt" "Official sample (3 test cases)"; \
-	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input2.txt" "PlayOnWords/expected2.txt" "Single word / disconnected graph"; \
-	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input3.txt" "PlayOnWords/expected3.txt" "Degree-imbalanced (impossible)"; \
-	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input4.txt" "PlayOnWords/expected4.txt" "Eulerian Circuit (8 words)"; \
-	run_bench "PlayOnWords/play_on_words" "PlayOnWords/input5.txt" "PlayOnWords/expected5.txt" "Disconnected multi-component"; \
-	printf "\n$(BOLD)$(CYAN)▶ Knight in a War Grid (UVa 11906)$(RESET)\n"; \
-	printf "   $(DIM)Algorithm: BFS + unique-move dedup — O(R·C·8)$(RESET)\n\n"; \
-	run_bench "KnightInWar/knight_in_war" "KnightInWar/input1.txt" "KnightInWar/expected1.txt" "Sample cases (3x3 and 2x2 grid)"; \
-	run_bench "KnightInWar/knight_in_war" "KnightInWar/input2.txt" "KnightInWar/expected2.txt" "M==N edge cases"; \
-	run_bench "KnightInWar/knight_in_war" "KnightInWar/input3.txt" "KnightInWar/expected3.txt" "M==0 / N==0 edge cases"; \
-	run_bench "KnightInWar/knight_in_war" "KnightInWar/input4.txt" "KnightInWar/expected4.txt" "10x10 Grid (8 Water cells)"; \
-	run_bench "KnightInWar/knight_in_war" "KnightInWar/input5.txt" "KnightInWar/expected5.txt" "12x12 Grid (6 Water cells)"; \
-	printf "\n$(BOLD)$(CYAN)──────────────────────────────────────────────────────────────$(RESET)\n"; \
-	if [ $$pass_count -eq $$total_count ]; then \
-		printf "$(BOLD)  SUMMARY: $(GREEN)%d / %d PASSED$(RESET)\n" $$pass_count $$total_count; \
-	else \
-		printf "$(BOLD)  SUMMARY: $(RED)%d / %d PASSED (%d FAILED)$(RESET)\n" $$pass_count $$total_count $$((total_count - pass_count)); \
-	fi; \
-	printf "  $(DIM)Slowest Test case: %s (%.2f ms)$(RESET)\n" "$$slowest_label" "$$slowest_time"; \
-	printf "  $(DIM)Total Benchmark Execution Time: %.2f ms$(RESET)\n" "$$total_time"; \
-	printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════$(RESET)\n\n"
+	printf "\n$(BOLD)$(CYAN)▶ Dark Roads (UVa 11631) — MST Algorithm Comparison$(RESET)\n"; \
+	printf "  ┌──────────────────────────────┬─────────────────┬─────────────────┬─────────────────┐\n"; \
+	printf "  │ Test Case                    │ Impl 1: Kruskal │ Impl 2: Prim    │ Impl 3: Boruvka │\n"; \
+	printf "  ├──────────────────────────────┼─────────────────┼─────────────────┼─────────────────┤\n"; \
+	run_bench_row "DarkRoads/input1.txt" "DarkRoads/expected1.txt" "Test 1 (7 junc, 11 rds)" "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	run_bench_row "DarkRoads/input2.txt" "DarkRoads/expected2.txt" "Test 2 (1 junc, 0 rds)"  "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	run_bench_row "DarkRoads/input3.txt" "DarkRoads/expected3.txt" "Test 3 (Multi-test)"     "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	run_bench_row "DarkRoads/input4.txt" "DarkRoads/expected4.txt" "Test 4 (Dense 10j, 15r)" "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	run_bench_row "DarkRoads/input5.txt" "DarkRoads/expected5.txt" "Test 5 (Cyclic 8j, 12r)" "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	run_bench_row "DarkRoads/input6.txt" "DarkRoads/expected6.txt" "Test 6 (10k Nodes, 50k Edges)" "DarkRoads/dark_roads_kruskal" "DarkRoads/dark_roads_prim" "DarkRoads/dark_roads_boruvka"; \
+	printf "  └──────────────────────────────┴─────────────────┴─────────────────┴─────────────────┘\n"; \
+	printf "\n$(BOLD)$(CYAN)▶ Knight in a War Grid (UVa 11906) — Grid Traversal Comparison$(RESET)\n"; \
+	printf "  ┌──────────────────────────────┬─────────────────┬─────────────────┬─────────────────┐\n"; \
+	printf "  │ Test Case                    │ Impl 1: BFS     │ Impl 2: DFS     │ Impl 3: DSU     │\n"; \
+	printf "  ├──────────────────────────────┼─────────────────┼─────────────────┼─────────────────┤\n"; \
+	run_bench_row "KnightInWar/input1.txt" "KnightInWar/expected1.txt" "Test 1 (6x6 Grid)"     "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	run_bench_row "KnightInWar/input2.txt" "KnightInWar/expected2.txt" "Test 2 (5x5 M==N)"    "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	run_bench_row "KnightInWar/input3.txt" "KnightInWar/expected3.txt" "Test 3 (7x7 M!=N)"    "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	run_bench_row "KnightInWar/input4.txt" "KnightInWar/expected4.txt" "Test 4 (10x10 Grid)"   "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	run_bench_row "KnightInWar/input5.txt" "KnightInWar/expected5.txt" "Test 5 (12x12 Grid)"   "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	run_bench_row "KnightInWar/input6.txt" "KnightInWar/expected6.txt" "Test 6 (100x100 Grid)" "KnightInWar/knight_in_war_bfs" "KnightInWar/knight_in_war_dfs" "KnightInWar/knight_in_war_dsu"; \
+	printf "  └──────────────────────────────┴─────────────────┴─────────────────┴─────────────────┘\n"; \
+	printf "\n$(BOLD)$(CYAN)▶ Play on Words (UVa 10129) — Eulerian Path Comparison$(RESET)\n"; \
+	printf "  ┌──────────────────────────────┬─────────────────┬─────────────────┬─────────────────┐\n"; \
+	printf "  │ Test Case                    │ Impl 1: DSU     │ Impl 2: DFS     │ Impl 3: Hierhol.│\n"; \
+	printf "  ├──────────────────────────────┼─────────────────┼─────────────────┼─────────────────┤\n"; \
+	run_bench_row "PlayOnWords/input1.txt" "PlayOnWords/expected1.txt" "Test 1 (4 Words)"      "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	run_bench_row "PlayOnWords/input2.txt" "PlayOnWords/expected2.txt" "Test 2 (2 Words)"      "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	run_bench_row "PlayOnWords/input3.txt" "PlayOnWords/expected3.txt" "Test 3 (5 Words)"      "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	run_bench_row "PlayOnWords/input4.txt" "PlayOnWords/expected4.txt" "Test 4 (8 Circuit)"    "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	run_bench_row "PlayOnWords/input5.txt" "PlayOnWords/expected5.txt" "Test 5 (7 Disconn)"    "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	run_bench_row "PlayOnWords/input6.txt" "PlayOnWords/expected6.txt" "Test 6 (100k Words)"   "PlayOnWords/play_on_words_dsu" "PlayOnWords/play_on_words_dfs" "PlayOnWords/play_on_words_hierholzer"; \
+	printf "  └──────────────────────────────┴─────────────────┴─────────────────┴─────────────────┘\n\n"; \
+	printf "$(BOLD)$(CYAN)══════════════════════════════════════════════════════════════════════════════════════$(RESET)\n\n"
 
 clean:
 	@rm -f $(BINARIES) *.o */*.o
